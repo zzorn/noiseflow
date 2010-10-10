@@ -81,6 +81,13 @@
       <systemPath>${basedir}/lib/scalaprops-${scalaprops.version}.jar</systemPath>
     </dependency>
 
+    <!-- Layout -->
+    <dependency>
+        <groupId>com.miglayout</groupId>
+        <artifactId>miglayout</artifactId>
+        <version>3.7.3.1</version>
+    </dependency>
+
   </dependencies>
 
   <build>

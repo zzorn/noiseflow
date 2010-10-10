@@ -9,7 +9,7 @@ import org.noiseflow.Time
 class PlayOutput extends Node {
 
   val bufferSize = property('bufferSize, 1024) onChange init _
-  val sampleRate = property('sampleRate, 44100) onChange init _
+  val sampleRate = property('sampleRate, 44100.0) onChange init _
   val volume = property('volume, 0.3)
   val input = property('input, 0.0)
 
@@ -21,7 +21,7 @@ class PlayOutput extends Node {
   init()
 
   def init() {
-    audioFormat = new AudioFormat(sampleRate(), 8, 1, true, false)
+    audioFormat = new AudioFormat(sampleRate().toFloat, 8, 1, true, false)
     outputLine = AudioSystem.getSourceDataLine(audioFormat)
     buffer = new Array[Byte](bufferSize())
     bufferPos = 0

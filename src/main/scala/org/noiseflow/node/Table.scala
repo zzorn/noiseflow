@@ -8,10 +8,28 @@ import org.noiseflow.Time
 class Table extends Node {
 
   private var _nodes: List[Node] = Nil
+  private var addListeners: List[Node => Unit] = Nil
+  private var removeListeners: List[Node => Unit] = Nil
 
   def nodes: List[Node] = _nodes
-  def addNode(node: Node) = _nodes = node :: _nodes
-  def removeNode(node: Node) = _nodes = _nodes.filterNot(_ == node)
+
+  def addNode(node: Node) {
+    _nodes ::= node
+    addListeners foreach (_(node))
+  }
+
+  def removeNode(node: Node) {
+    _nodes = _nodes.filterNot(_ == node)
+    removeListeners foreach (_(node))
+  }
+
+  def onNodeAdded(listener: Node => Unit) = addListeners ::= listener
+  def onNodeRemoved(listener: Node => Unit) = removeListeners ::= listener
+
+  def clearListeners() {
+    addListeners = Nil
+    removeListeners = Nil
+  }
 
   def update(time: Time) {
     nodes foreach (_.update(time))
