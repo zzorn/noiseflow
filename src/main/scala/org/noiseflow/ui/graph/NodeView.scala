@@ -21,6 +21,7 @@ class NodeView(val node: Node, tableView: TableView) extends JPanel {
   private var propertyTargets: Map[Property[_], PropertyTarget] = Map()
 
   setLayout(new MigLayout("wrap 3, insets null null null 0"))
+  setBackground(new Color(0.9f, 0.9f, 0.9f))
 
   setBorder(BorderFactory.createLineBorder(Color.BLACK))
   add(new JLabel(node.name()), "wrap")

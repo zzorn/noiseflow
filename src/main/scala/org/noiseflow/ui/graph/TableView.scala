@@ -22,6 +22,8 @@ class TableView(table: Table) extends JPanel {
   val migLayout: MigLayout = new MigLayout()
   setLayout(migLayout)
 
+  setBackground(new Color(0.7f, 0.7f, 0.7f))
+
   table.nodes foreach addView _
   table onNodeAdded addView _
   table onNodeRemoved removeView _
@@ -86,10 +88,15 @@ class TableView(table: Table) extends JPanel {
     repaint()
   }
 
-  override def paintComponent(g: Graphics) = {
-    // TODO: Draw connection lines
-    g.clearRect(0,0, getWidth, getHeight)
-    
+  override def paint(g: Graphics) = {
+    super.paint(g)
+
+    if (bindingPreviewLineVisible) {
+      g.setColor(Color.BLACK)
+      g.drawLine(bindingPreviewLine._1, bindingPreviewLine._2,
+                 bindingPreviewLine._3, bindingPreviewLine._4)
+    }
+
     views.values foreach {nv =>
       nv.node.properties.values foreach { p =>
         val bound = p.boundProperty
@@ -106,17 +113,5 @@ class TableView(table: Table) extends JPanel {
         }
       }
     }
-  }
-
-
-  override def paint(g: Graphics) = {
-    super.paint(g)
-
-    if (bindingPreviewLineVisible) {
-      g.setColor(Color.BLACK)
-      g.drawLine(bindingPreviewLine._1, bindingPreviewLine._2,
-                 bindingPreviewLine._3, bindingPreviewLine._4)
-    }
-
   }
 }
