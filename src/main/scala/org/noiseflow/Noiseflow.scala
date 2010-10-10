@@ -1,7 +1,8 @@
 package org.noiseflow
 
-import node.{PlayOutput, SineWave, Table}
+import node._
 import ui.graph.TableView
+import ui.NoiseflowUi
 import util.SimpleFrame
 import javax.swing.{AbstractAction, JButton, JPanel}
 import java.awt.event.ActionEvent
@@ -16,30 +17,7 @@ object Noiseflow {
     val sampleRate = 44100
     val table = createTable(sampleRate)
 
-    val panel: JPanel = new JPanel(new BorderLayout())
-    panel.add(new JButton(new AbstractAction("Play"){
-      def actionPerformed(e: ActionEvent) = {
-
-        table.start()
-
-        var i = 0
-        val samples = sampleRate * 2
-        val time = new Time(0, 0, sampleRate)
-        while(i < samples) {
-          table.refresh()
-          table.update(time)
-          time.advance(1)
-          i += 1
-        }
-
-        table.stop()
-
-      }
-    }), BorderLayout.NORTH)
-    
-    panel.add(new TableView(table), BorderLayout.CENTER)
-
-    val frame = new SimpleFrame("Noiseflow", panel)
+    new NoiseflowUi(table, new Player(), createNodeFactories())
   }
 
   def createTable(sampleRate: Double): Table = {
@@ -53,6 +31,15 @@ object Noiseflow {
     playOutput.input.bind(sineWave.out, automaticUpdate=false)
 
     table
+  }
+
+  def createNodeFactories(): List[NodeFactory] = {
+    HardwiredNodeFactory("Sine", "Sine wave generator", null, () => new SineWave()) ::
+    HardwiredNodeFactory("Square", "Square wave generator", null, () => new SquareWave()) ::
+    HardwiredNodeFactory("White Noise", "White noise generator", null, () => new WhiteNoise()) ::
+    HardwiredNodeFactory("Mixer", "Mixes two input lines with a selection line", null, () => new Mix()) :: 
+    Nil
+
   }
 
 }

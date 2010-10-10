@@ -13,8 +13,8 @@ class TableView(table: Table) extends JPanel {
 
   private var views: Map[Node, NodeView] = Map()
 
-  private var insertX = 10
-  private var insertY = 10
+  private var insertX = 100
+  private var insertY = 100
 
   private var bindingPreviewLineVisible = false
   private var bindingPreviewLine = (0,0,0,0)
@@ -30,11 +30,12 @@ class TableView(table: Table) extends JPanel {
     val view = new NodeView(node, this)
     view.xPos = insertX
     view.yPos = insertY
-    add(view, "pos " + view.xPos + " " + view.yPos)
-    insertX += 200
-    insertY += 200
+    add(view, "pos " + view.xPos + " " + view.yPos, 0)
 
     views += node -> view
+    invalidate()
+    validate()
+    repaint()
   }
 
   def removeView(node: Node) {
@@ -42,6 +43,9 @@ class TableView(table: Table) extends JPanel {
       remove(views(node))
       views -= node
     }
+    invalidate()
+    validate()
+    repaint()
   }
 
   def reposition(nodeView: NodeView, x: Int, y: Int) {
